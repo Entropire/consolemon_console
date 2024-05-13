@@ -1,23 +1,37 @@
 ﻿using consolemon_library;
-using System.Diagnostics;
+using consolemon_library.Objects;
 
 namespace consolemon_console
 {
-	internal class Program
+    internal class Program
 	{
-		private consolemon_library.Map.MapGenerator generator;
-
-		private consolemon_library.Map.Chunk[] loadedChunks;
+		private Dictionary<string, Chunk> loadedChunks;
 
 		static void Main(string[] args)
 		{
 			Program program = new Program();
-			program.start();
+			program.Start();
 		}
 
-		private void start()
+		private void Start()
 		{
-			loadedChunks = generator.GenerateStartOfMap();
+			Player player = new Player(0, 0);
+			MapHandeler mapHandeler = new MapHandeler();
+			loadedChunks = mapHandeler.GenerateStartOfMap(20);
+
+			string[] map = mapHandeler.renderMap(player, loadedChunks);
+
+			foreach (string line in map)
+			{
+				Console.WriteLine(line);
+			}
 		}
+
+		private void DrawMap(Player player, Chunk[] chunks)
+		{
+            double playerChunkX = Math.Round((double)player.x / 16);
+            double playerChunkY = Math.Round((double)player.y / 10);
+
+        }
 	}
 }

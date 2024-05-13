@@ -9,11 +9,10 @@ namespace consolemon_library
 {
 	public class Main
 	{
-		internal String dir = new FileInfo(typeof(Consolemons).Assembly.Location).DirectoryName;
-
 		public Consolemon[] getConsolemons()
 		{
-			string[] files = Directory.GetFiles(Path.Join(dir, "Consolemons"));
+            String dir = new FileInfo(typeof(Consolemons).Assembly.Location).DirectoryName;
+            string[] files = Directory.GetFiles(Path.Join(dir, "Consolemons"));
 
 			Consolemon[] consolemons = new Consolemon[files.Length];
 			for (int i = 0; i < files.Length; i++)

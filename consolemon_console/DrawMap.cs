@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace consolemon_library.Map
+namespace consolemon_console
 {
-	internal class MapLoader
-	{
-	}
+    internal class DrawMap
+    {
+
+
+    }
 }

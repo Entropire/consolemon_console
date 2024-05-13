@@ -1,6 +1,8 @@
-﻿namespace consolemon_library
+﻿using consolemon_library.Objects;
+
+namespace consolemon_library
 {
-	public class Consolemon
+    public class Consolemon
 	{
 		public string name { get; set;  }
 		public int health { get; set; }
