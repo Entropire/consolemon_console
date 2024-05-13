@@ -1,0 +1,20 @@
+{
+  "name": "EnterMon",
+  "health": 100,
+  "energy": 20,
+  "weakness": 0,
+  "skill": [
+    {
+      "name": "KeyPress",
+      "damage": 5,
+      "energyCost": 10,
+      "element": 0
+    },
+    {
+      "name": "Default",
+      "damage": 1,
+      "energyCost": 0,
+      "element": 3
+    }
+  ]
+}
