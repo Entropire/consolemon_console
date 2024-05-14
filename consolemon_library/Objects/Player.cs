@@ -21,6 +21,31 @@ namespace consolemon_library.Objects
         {
             this.x += x;
             this.y += y;
-        }
+			this.innerChunkX += x;
+			this.innerChunkY += y;
+
+            if (innerChunkX > 15)
+            {
+                innerChunkX = 0;
+                chunkX--;
+            }
+            if (innerChunkX < 0)
+            {
+                innerChunkX = 15;
+                chunkX++;
+            }
+
+			if (innerChunkY > 15)
+			{
+				innerChunkY = 0;
+				chunkY--;
+			}
+			if (innerChunkY < 0)
+			{
+				innerChunkY = 15;
+				chunkY++;
+			}
+
+		}
     }
 }

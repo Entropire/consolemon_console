@@ -1,12 +1,16 @@
 ﻿using consolemon_library;
 using consolemon_library.Objects;
+using System.Net;
+using System.Net.Http.Headers;
 
 namespace consolemon_console
 {
     internal class Program
 	{
 		private Dictionary<string, Chunk> loadedChunks;
-
+		private Player player;
+		private MapHandeler mapHandeler;
+		private bool runGame = true;
 		static void Main(string[] args)
 		{
 			Program program = new Program();
@@ -15,23 +19,43 @@ namespace consolemon_console
 
 		private void Start()
 		{
-			Player player = new Player(0, 0);
-			MapHandeler mapHandeler = new MapHandeler();
-			loadedChunks = mapHandeler.GenerateStartOfMap(20);
+			mapHandeler = new MapHandeler();
+			player = new Player(8, 8);
 
-			string[] map = mapHandeler.renderMap(player, loadedChunks);
+			while (runGame)
+			{
+				RenderMap();
+				InputManager();
+			}
+		}
 
+		private void InputManager()
+		{
+			ConsoleKeyInfo key = Console.ReadKey();
+			switch (key.Key) 
+			{
+				case ConsoleKey.W: player.move(0, 1);
+					break;
+				case ConsoleKey.S: player.move(0, -1);
+					break;
+				case ConsoleKey.D: player.move(-1,0);
+					break;
+				case ConsoleKey.A: player.move(1,0);
+					break;
+			}
+
+
+		}
+
+		private void RenderMap()
+		{
+			loadedChunks = mapHandeler.LoadChunks(10, 10, player);
+			string[] map = mapHandeler.loadMap(player, loadedChunks);
+			Console.Clear();
 			foreach (string line in map)
 			{
 				Console.WriteLine(line);
 			}
 		}
-
-		private void DrawMap(Player player, Chunk[] chunks)
-		{
-            double playerChunkX = Math.Round((double)player.x / 16);
-            double playerChunkY = Math.Round((double)player.y / 10);
-
-        }
 	}
 }

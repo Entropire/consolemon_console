@@ -1,152 +1,146 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using consolemon_library.Objects;
+﻿using consolemon_library.Objects;
 
 namespace consolemon_library
 {
     public class MapHandeler
     {
-        public Dictionary<string, Chunk> GenerateStartOfMap(int radius)
-        {
-            int range = (2 * radius + 1) * (2 * radius + 1);
-            Dictionary<string, Chunk> newChunks = new Dictionary<string, Chunk>();
+		FileHandeler fileHandeler = new FileHandeler();
 
-            int i = 0;
-            for (int x = -radius; x <= radius; x++)
-            {
-                for (int y = -radius; y <= radius; y++)
-                {
-                    Chunk newChunk = GenerateChunk(x, y);
-                    newChunks.Add($"chunk_{x}_{y}", newChunk);
-                    saveChunk(newChunk);
+		public Chunk GenerateChunk(int x, int y, string blockType)
+		{
+			string[][] map = new string[16][];
 
-                    i++;
-                }
-            }
+			for (int i = 0; i < map.Length; i++)
+			{
+				map[i] = new string[] { blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType };
+			}
 
-            return newChunks;
-        }
+			Chunk chunk = new Chunk(x, y, map);
+			fileHandeler.SaveFile(chunk, "map", $"chunk_{x}_{y}.json");
 
-        public Chunk GenerateChunk(int x, int y)
-        {
-            string[][] map = new string[16][];
+			return chunk;
+		}
 
-            for (int i = 0; i < map.Length; i++)
-            {
-                map[i] = new string[] { "#", "#", "#", "!", "#", "#", "#", "#", "#", "#", "#", "!", "#", "#", "#", "#"};
-            }
+		public Dictionary<string, Chunk> LoadChunks(int rangeX, int rangeY, Player player)
+		{
+			string[] objects = new string[] { "!", "@", "#", "$","%", "^", "&", "*", "(" };
 
-            Chunk chunk = new Chunk(x, y, map);
-            saveChunk(chunk);
+			int range = rangeX * rangeY;
+			Dictionary<string, Chunk> newLoadedChunks = new Dictionary<string, Chunk>();
 
-            return chunk;
-        }
+			int startChunkX = player.chunkX - rangeX / 2;
+			int startChunkY = player.chunkY - rangeY / 2;
 
-        public void saveChunk(Chunk chunk)
-        {
-            string dir = new FileInfo(typeof(Consolemons).Assembly.Location).DirectoryName;
-            Directory.CreateDirectory(Path.Combine(dir, "Chunks"));
-            string filePath = Path.Join(dir, $"Chunks/chunk_{chunk.x}_{chunk.y}.json");
+			Random random = new Random();
+			int objectIndex = random.Next(0, objects.Length);
+			int index = 0;
+			for (int i = 0; i < rangeY; i++)
+			{
+				int chunkX = startChunkX;
+				for (int j = 0; j < rangeX; j++)
+				{
+					Chunk chunk = fileHandeler.LoadFile<Chunk>($"map/chunk_{chunkX}_{startChunkY}.json");
+					if (chunk == null)
+					{
+						chunk = GenerateChunk(chunkX, startChunkY, objects[objectIndex]);
+						objectIndex++;
+						if (objectIndex >= objects.Length)
+						{
+							objectIndex = 0;
+						}
+					}
+					newLoadedChunks.Add($"chunk_{chunkX}_{startChunkY}", chunk);
 
-            string jsonString = JsonSerializer.Serialize(chunk);
+					index++;
+					chunkX++;
+				}
+				startChunkY++;
+			}
+			return newLoadedChunks;
+		}
 
-            try
-            {
-                using (StreamWriter sw = new StreamWriter(filePath))
-                {
-                    sw.Write(jsonString);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
+		public string[] loadMap(Player player, Dictionary<string, Chunk> loadedChunks)
+		{
+			int range = Console.WindowHeight;
+			string[] map = new string[range];
 
-        public Chunk[] loadChunks(Player player, int radius)
-        {
-            int range = (2 * radius + 1) * (2 * radius + 1);
-            Chunk[] chunks = new Chunk[range];
-            double playerChunkX = Math.Round((double)player.x / 16);
-            double playerChunkY = Math.Round((double)player.y / 16);
+			float worldPosX = ((float)player.x + 59) / -16;
+			float worldPosY = ((float)player.y + 14) / -16;
 
-            String dir = new FileInfo(typeof(Consolemons).Assembly.Location).DirectoryName;
+			double chunkPosX = Math.Ceiling(worldPosX);
+			double chunkPosY = Math.Ceiling(worldPosY);
 
-            int i = 0;
-            try
-            {
-                for (int x = -radius; x <= radius; x++)
-                {
-                    for (int y = -radius; y <= radius; y++)
-                    {
-                        int chunkX = (int)playerChunkX + x;
-                        int chunkY = (int)playerChunkY + y;
+			int localPosX = 16 + (int)((worldPosX - chunkPosX) * 16);
+			int localPosY = 16 + (int)((worldPosY - chunkPosY) * 16);
 
-                        if (File.Exists(Path.Combine(dir, $"Chunks/chunk_{chunkX}_{chunkY}")))
-                        {
-                            string jsonstring = File.ReadAllText(Path.Combine(dir, $"Chunks/chunk_{chunkX}_{chunkY}"));
-                            if (jsonstring != null)
-                            {
-                                Chunk chunk = JsonSerializer.Deserialize<Chunk>(jsonstring);
-                                chunks[i] = chunk;
-                            }
-                        }
-                        else
-                        {
-                            chunks[i] = GenerateChunk(x, y);
-                        }
-                        i++;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
+			int index = 0;
+			for (int i = 0; i < Console.WindowHeight; i++)
+			{
+				int x = (int)localPosX;
+				int chunkX = (int)chunkPosX;
 
-            return chunks;
-        }
+				string line = "";
+				for (int j = 0; j < Console.WindowWidth; j++)
+				{
+					Chunk chunk = loadedChunks[$"chunk_{chunkX}_{chunkPosY}"];
+					if (chunk != null)
+					{
+						line += chunk.GetMapItem(x, localPosY);
+					}
 
-        public string[] renderMap(Player player, Dictionary<string, Chunk> loadedChunks)
-        {
-            int range = Console.WindowHeight * Console.WindowWidth;
-            string[] map = new string[range];
+					x++;
+					if (x > 15)
+					{
+						x = 0;
+						chunkX++;
+					}
+				}
 
-            float startX = ((player.innerChunkX + 120) / 16) / 2;
-            float startY = ((player.innerChunkY + 30) / 16) / 2;
+				map[i] = line;
 
-            int startChunkX = (int)Math.Floor(startX);
-            int startChunkY = (int)Math.Floor(startY);
-
-            startX = startX - startChunkX;
-            startY = startY - startChunkY;
-
-            int index = 0;
-            for (int i = 0; i < Console.WindowHeight; i++)
-            {
-                int chunkX = startChunkX;
-
-                for (int j = 0; j < Console.WindowWidth; j++)
-                {
-                    Chunk chunk = loadedChunks[$"chunk_{chunkX}_{startChunkY}"];
-                    if (chunk != null)
-                    {
-                        chunk.GetMapItem(startX, startY);
-                    }
-                }
-
-                if (startY > 15)
-                {
-                    startY = 0;
-                    startChunkY++;
-                }
-            }
-            return map;
-        }
-    }
+				localPosY++;
+				if (localPosY > 15)
+				{
+					localPosY = 0;
+					chunkPosY++;
+				}
+			}
+			return map;
+		}
+	}
 }
+
+
+//public Dictionary<string, Chunk> GenerateStartOfMap(int radius)
+//{
+//	string[] blockTypes = new string[] { "!", "@", "#", "$", "%", "^", "&", "*", "(", "}", ":", "'", "<", ">", "/", "?", ".", "[", "-", "_", "f", "l", "u", "p", "c", "k" };
+
+//	int range = (2 * radius + 1) * (2 * radius + 1);
+//	Dictionary<string, Chunk> newChunks = new Dictionary<string, Chunk>();
+
+//	int index = 0;
+//	int i = 0;
+//	for (int x = -radius; x <= radius; x++)
+//	{
+//		for (int y = -radius; y <= radius; y++)
+//		{
+//			Chunk newChunk = GenerateChunk(x, y, blockTypes[index]);
+//			newChunks.Add($"chunk_{x}_{y}", newChunk);
+//			saveChunk(newChunk);
+
+//			i++;
+//			index++;
+//			if (index >= blockTypes.Length)
+//			{
+//				index = 0;
+//			}
+//		}
+//	}
+
+//	return newChunks;
+//}
+
+
+
+
+
