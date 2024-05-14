@@ -61,8 +61,9 @@ namespace consolemon_library
 
 		public string[] loadMap(Player player, Dictionary<string, Chunk> loadedChunks)
 		{
-			int range = Console.WindowHeight;
-			string[] map = new string[range];
+			int rangeY = Console.WindowHeight;
+			int rangeX = Console.WindowWidth;
+			string[][] map = new string[rangeY][];
 
 			float worldPosX = ((float)player.x + 59) / -16;
 			float worldPosY = ((float)player.y + 14) / -16;
@@ -82,6 +83,8 @@ namespace consolemon_library
 				string line = "";
 				for (int j = 0; j < Console.WindowWidth; j++)
 				{
+					if(chunkX == -0) chunkX = 0;
+					if(chunkPosY == -0) chunkPosY = 0;
 					Chunk chunk = loadedChunks[$"chunk_{chunkX}_{chunkPosY}"];
 					if (chunk != null)
 					{
