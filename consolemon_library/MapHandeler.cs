@@ -61,29 +61,43 @@ namespace consolemon_library
 
 		public string loadMap(Player player, Dictionary<string, Chunk> loadedChunks)
 		{
-			string map = "";
+			double consoleWidth = Console.WindowWidth;
+            double consoleHeight = Console.WindowHeight - 2;
 
-			float worldPosX = ((float)player.x + 59) / -16;
-			float worldPosY = ((float)player.y + 13) / -16;
+            string map = "";
 
-			double chunkPosX = Math.Ceiling(worldPosX);
+			float worldPosX = ((float)player.x + (int)Math.Floor(consoleWidth / 2)) / -16;
+            float worldPosY = ((float)player.x + (int)Math.Floor(consoleHeight / 2)) / -16;
+
+            double chunkPosX = Math.Ceiling(worldPosX);
 			double chunkPosY = Math.Ceiling(worldPosY);
 
-			int localPosX = 16 + (int)((worldPosX - chunkPosX) * 16);
-			int localPosY = 16 + (int)((worldPosY - chunkPosY) * 16);
+			int localPosX = 16 + (int)((worldPosX - chunkPosX) * 16) % 16;
+			int localPosY = 16 + (int)((worldPosY - chunkPosY) * 16) % 16;
 
+			int chunky = (int)chunkPosY;
 			int index = 0;
-			for (int i = 0; i < 28; i++)
+			for (int i = 0; i < consoleHeight; i++)
 			{
 				int x = (int)localPosX;
 				int chunkX = (int)chunkPosX;
 
 				string line = "";
-				for (int j = 0; j < 120; j++)
+				for (int j = 0; j < consoleWidth; j++)
 				{
 					if(chunkX == -0) chunkX = 0;
 					if(chunkPosY == -0) chunkPosY = 0;
-					Chunk chunk = loadedChunks[$"chunk_{chunkX}_{chunkPosY}"];
+					Chunk chunk;
+                    if (!loadedChunks.ContainsKey($"chunk_{chunkX}_{chunky}"))
+                    {
+						chunk = GenerateChunk(chunkX, chunky, "v");
+						loadedChunks.Add($"chunk_{chunkX}_{chunky}", chunk);
+                    }
+					else
+					{
+                        chunk = loadedChunks[$"chunk_{chunkX}_{chunky}"];
+                    }
+                    
 					if (chunk != null)
 					{
 						line += chunk.GetMapItem(x, localPosY);

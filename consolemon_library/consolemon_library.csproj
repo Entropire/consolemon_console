@@ -7,13 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="Consolemons\DeleteMon.json">
+    <None Update="assets\consolemons.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Consolemons\EnterMon.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Consolemons\NewLineMon.json">
+    <None Update="assets\scenes.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

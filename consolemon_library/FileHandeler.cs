@@ -1,10 +1,12 @@
-﻿using System.Text.Json;
+﻿using consolemon_library.Objects;
+using System.Text.Json;
+using System.Xml.Linq;
 
 namespace consolemon_library
 {
-	internal class FileHandler
+    public class FileHandler
 	{
-		internal T LoadFile<T>(string dir)
+		public T LoadFile<T>(string dir)
 		{
 			try
 			{
@@ -27,10 +29,10 @@ namespace consolemon_library
 			return default;
 		}
 
-		internal void SaveFile<T>(T fileData, string dir, string filename) 
+        public void SaveFile<T>(T fileData, string dir, string filename) 
 		{
 			string programDir = new FileInfo(typeof(Consolemon).Assembly.Location).DirectoryName;
-			string path = Path.Combine(programDir, "map");
+			string path = Path.Combine(programDir, dir);
 			if (Directory.Exists(path) == false)
 			{
 				Directory.CreateDirectory(path);
@@ -40,7 +42,6 @@ namespace consolemon_library
 
 			try
 			{
-
 				string jsonString = JsonSerializer.Serialize(fileData);
 				File.WriteAllText(fileDir, jsonString);
 			}
@@ -49,5 +50,30 @@ namespace consolemon_library
 				Console.WriteLine("Error: " + ex.Message);
 			}
 		}
-	}
+
+    //    public void SaveFile<T>(T[] fileData, string dir, string filename)
+    //    {
+    //        string programDir = new FileInfo(typeof(Consolemon).Assembly.Location).DirectoryName;
+    //        string path = Path.Combine(programDir, dir);
+    //        if (Directory.Exists(path) == false)
+    //        {
+    //            Directory.CreateDirectory(path);
+    //        }
+
+    //        String fileDir = Path.Combine(path, filename);
+
+    //        try
+    //        {
+				//foreach (T data in fileData)
+				//{
+    //                string jsonString = JsonSerializer.Serialize(data);
+    //                File.WriteAllText(fileDir, jsonString);
+    //            }
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            Console.WriteLine("Error: " + ex.Message);
+    //        }
+    //    }
+    }
 }

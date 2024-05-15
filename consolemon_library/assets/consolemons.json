@@ -1,0 +1,62 @@
+[
+  {
+    "name": "DeleteMon",
+    "health": 90,
+    "energy": 25,
+    "weakness": 2,
+    "skill": [
+      {
+        "name": "Clear",
+        "damage": 4,
+        "energyCost": 2,
+        "element": 4
+      },
+      {
+        "name": "Default",
+        "damage": 1,
+        "energyCost": 0,
+        "element": 3
+      }
+    ]
+  },
+  {
+    "name": "EnterMon",
+    "health": 100,
+    "energy": 20,
+    "weakness": 0,
+    "skill": [
+      {
+        "name": "KeyPress",
+        "damage": 5,
+        "energyCost": 10,
+        "element": 0
+      },
+      {
+        "name": "Default",
+        "damage": 1,
+        "energyCost": 0,
+        "element": 3
+      }
+    ]
+  },
+  {
+    "name": "NewLineMon",
+    "health": 90,
+    "energy": 15,
+    "weakness": 1,
+    "skill": [
+      {
+        "name": "Clear",
+        "damage": 5,
+        "energyCost": 10,
+        "element": 2
+      },
+      {
+        "name": "Default",
+        "damage": 1,
+        "energyCost": 0,
+        "element": 3
+      }
+    ]
+  }
+]
