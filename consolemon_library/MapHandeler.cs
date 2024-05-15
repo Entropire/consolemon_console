@@ -4,7 +4,7 @@ namespace consolemon_library
 {
     public class MapHandeler
     {
-		FileHandeler fileHandeler = new FileHandeler();
+		FileHandler fileHandeler = new FileHandler();
 
 		public Chunk GenerateChunk(int x, int y, string blockType)
 		{
@@ -59,14 +59,12 @@ namespace consolemon_library
 			return newLoadedChunks;
 		}
 
-		public string[] loadMap(Player player, Dictionary<string, Chunk> loadedChunks)
+		public string loadMap(Player player, Dictionary<string, Chunk> loadedChunks)
 		{
-			int rangeY = Console.WindowHeight;
-			int rangeX = Console.WindowWidth;
-			string[][] map = new string[rangeY][];
+			string map = "";
 
 			float worldPosX = ((float)player.x + 59) / -16;
-			float worldPosY = ((float)player.y + 14) / -16;
+			float worldPosY = ((float)player.y + 13) / -16;
 
 			double chunkPosX = Math.Ceiling(worldPosX);
 			double chunkPosY = Math.Ceiling(worldPosY);
@@ -75,13 +73,13 @@ namespace consolemon_library
 			int localPosY = 16 + (int)((worldPosY - chunkPosY) * 16);
 
 			int index = 0;
-			for (int i = 0; i < Console.WindowHeight; i++)
+			for (int i = 0; i < 28; i++)
 			{
 				int x = (int)localPosX;
 				int chunkX = (int)chunkPosX;
 
 				string line = "";
-				for (int j = 0; j < Console.WindowWidth; j++)
+				for (int j = 0; j < 120; j++)
 				{
 					if(chunkX == -0) chunkX = 0;
 					if(chunkPosY == -0) chunkPosY = 0;
@@ -99,7 +97,15 @@ namespace consolemon_library
 					}
 				}
 
-				map[i] = line;
+				if (i >= Console.WindowHeight)
+				{
+					map += line + "\n";
+				}
+				else
+				{
+					map += line;
+				}
+				
 
 				localPosY++;
 				if (localPosY > 15)
@@ -112,38 +118,3 @@ namespace consolemon_library
 		}
 	}
 }
-
-
-//public Dictionary<string, Chunk> GenerateStartOfMap(int radius)
-//{
-//	string[] blockTypes = new string[] { "!", "@", "#", "$", "%", "^", "&", "*", "(", "}", ":", "'", "<", ">", "/", "?", ".", "[", "-", "_", "f", "l", "u", "p", "c", "k" };
-
-//	int range = (2 * radius + 1) * (2 * radius + 1);
-//	Dictionary<string, Chunk> newChunks = new Dictionary<string, Chunk>();
-
-//	int index = 0;
-//	int i = 0;
-//	for (int x = -radius; x <= radius; x++)
-//	{
-//		for (int y = -radius; y <= radius; y++)
-//		{
-//			Chunk newChunk = GenerateChunk(x, y, blockTypes[index]);
-//			newChunks.Add($"chunk_{x}_{y}", newChunk);
-//			saveChunk(newChunk);
-
-//			i++;
-//			index++;
-//			if (index >= blockTypes.Length)
-//			{
-//				index = 0;
-//			}
-//		}
-//	}
-
-//	return newChunks;
-//}
-
-
-
-
-

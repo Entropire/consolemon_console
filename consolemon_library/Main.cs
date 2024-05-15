@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using consolemon_library.Objects;
 
 namespace consolemon_library
 {
-	public class Main
+    public class Main
 	{
 		public Consolemon[] getConsolemons()
 		{
-            String dir = new FileInfo(typeof(Consolemons).Assembly.Location).DirectoryName;
+            String dir = new FileInfo(typeof(Consolemon).Assembly.Location).DirectoryName;
             string[] files = Directory.GetFiles(Path.Join(dir, "Consolemons"));
 
 			Consolemon[] consolemons = new Consolemon[files.Length];

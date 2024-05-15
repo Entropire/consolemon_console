@@ -5,6 +5,7 @@
         public int x { get; set; }
         public int y { get; set; }
         public string[][] map { get; set; }
+        public Consolemon[] consolemons { get; set; }
 
         public Chunk(int x, int y, string[][] map)
         {
