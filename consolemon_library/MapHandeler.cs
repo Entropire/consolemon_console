@@ -2,53 +2,55 @@
 
 namespace consolemon_library
 {
-    public class MapHandeler
+    public class MapHandler
     {
-		FileHandler fileHandeler = new FileHandler();
+		FileHandler fileHandler = new FileHandler();
 
-		public Chunk GenerateChunk(int x, int y, string blockType)
+		public Chunk GenerateChunk(int x, int y)
 		{
+			string[] objects = new string[] { "!", "@", "#", "$", "%", "^", "&", "*", "(" };
+
 			string[][] map = new string[16][];
 
+			Random random = new Random();
+			int objectIndex = random.Next(0, objects.Length);
 			for (int i = 0; i < map.Length; i++)
 			{
-				map[i] = new string[] { blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType, blockType };
+				map[i] = new string[] { objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex], objects[objectIndex] };
 			}
 
 			Chunk chunk = new Chunk(x, y, map);
-			fileHandeler.SaveFile(chunk, "map", $"chunk_{x}_{y}.json");
+			fileHandler.SaveFile(chunk, "map", $"chunk_{x}_{y}.json");
 
 			return chunk;
 		}
 
-		public Dictionary<string, Chunk> LoadChunks(int rangeX, int rangeY, Player player)
+		public Dictionary<string, Chunk> LoadChunks(Player player)
 		{
-			string[] objects = new string[] { "!", "@", "#", "$","%", "^", "&", "*", "(" };
-
-			int range = rangeX * rangeY;
 			Dictionary<string, Chunk> newLoadedChunks = new Dictionary<string, Chunk>();
 
-			int startChunkX = player.chunkX - rangeX / 2;
-			int startChunkY = player.chunkY - rangeY / 2;
+			int maxChunksWidth = (int)Math.Ceiling((double)Console.WindowWidth / 16);
+			int maxChunksHeight = (int)Math.Ceiling((double)Console.WindowHeight / 16);
 
-			Random random = new Random();
-			int objectIndex = random.Next(0, objects.Length);
+			int startChunkX = player.chunkX - maxChunksWidth / 2;
+			int startChunkY = player.chunkY - maxChunksHeight / 2;
+
 			int index = 0;
-			for (int i = 0; i < rangeY; i++)
+			for (int i = 0; i < maxChunksHeight; i++)
 			{
 				int chunkX = startChunkX;
-				for (int j = 0; j < rangeX; j++)
+				for (int j = 0; j < maxChunksWidth; j++)
 				{
-					Chunk chunk = fileHandeler.LoadFile<Chunk>($"map/chunk_{chunkX}_{startChunkY}.json");
-					if (chunk == null)
+					Chunk chunk;
+					if (File.Exists($"map/chunk_{chunkX}_{startChunkY}.json"))
 					{
-						chunk = GenerateChunk(chunkX, startChunkY, objects[objectIndex]);
-						objectIndex++;
-						if (objectIndex >= objects.Length)
-						{
-							objectIndex = 0;
-						}
+						chunk = fileHandler.LoadFile<Chunk>($"map/chunk_{chunkX}_{startChunkY}.json");
 					}
+					else
+					{
+						chunk = GenerateChunk(chunkX, startChunkY);
+					}
+
 					newLoadedChunks.Add($"chunk_{chunkX}_{startChunkY}", chunk);
 
 					index++;
@@ -88,16 +90,8 @@ namespace consolemon_library
 					if(chunkX == -0) chunkX = 0;
 					if(chunkPosY == -0) chunkPosY = 0;
 					Chunk chunk;
-                    if (!loadedChunks.ContainsKey($"chunk_{chunkX}_{chunky}"))
-                    {
-						chunk = GenerateChunk(chunkX, chunky, "v");
-						loadedChunks.Add($"chunk_{chunkX}_{chunky}", chunk);
-                    }
-					else
-					{
-                        chunk = loadedChunks[$"chunk_{chunkX}_{chunky}"];
-                    }
-                    
+					chunk = loadedChunks[$"chunk_{chunkX}_{chunky}"];
+                   
 					if (chunk != null)
 					{
 						line += chunk.GetMapItem(x, localPosY);

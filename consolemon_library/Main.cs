@@ -8,6 +8,7 @@ namespace consolemon_library
 		internal Scene[] scenes;
         internal Consolemon[] consolemons;
 		internal InputManager inputManager;
+		internal Dictionary<string, Chunk> loadedChunks;
 
         internal Player player;
 		internal bool runGame = false;
@@ -34,6 +35,7 @@ namespace consolemon_library
 
 		private string SceneManager(string map)
 		{
+			MapHandler mapHandeler = new MapHandler();
 			string arrows = "__      __\\ \\    / / \\ \\  / /   > >< <   / /  \\ \\ /_/    \\_\\";
 			string character = "";
             if (sceneIndex == 0)
@@ -66,6 +68,12 @@ namespace consolemon_library
                     }
                 }
             }
+			else if (sceneIndex == 1)
+			{
+				loadedChunks = mapHandeler.LoadChunks(20, 20, player);
+				map = mapHandeler.loadMap(player, loadedChunks);
+				map = map.Remove(1620, 1).Insert(1620, "P");
+			}
 
 			return map;
 		}

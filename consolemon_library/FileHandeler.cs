@@ -50,30 +50,5 @@ namespace consolemon_library
 				Console.WriteLine("Error: " + ex.Message);
 			}
 		}
-
-    //    public void SaveFile<T>(T[] fileData, string dir, string filename)
-    //    {
-    //        string programDir = new FileInfo(typeof(Consolemon).Assembly.Location).DirectoryName;
-    //        string path = Path.Combine(programDir, dir);
-    //        if (Directory.Exists(path) == false)
-    //        {
-    //            Directory.CreateDirectory(path);
-    //        }
-
-    //        String fileDir = Path.Combine(path, filename);
-
-    //        try
-    //        {
-				//foreach (T data in fileData)
-				//{
-    //                string jsonString = JsonSerializer.Serialize(data);
-    //                File.WriteAllText(fileDir, jsonString);
-    //            }
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            Console.WriteLine("Error: " + ex.Message);
-    //        }
-    //    }
     }
 }
