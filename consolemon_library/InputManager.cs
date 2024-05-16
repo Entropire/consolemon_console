@@ -87,10 +87,6 @@ namespace consolemon_library
             {
                 main.player.move(-1, 0);
             }
-            else
-            {
-
-            }
         }
 
         private void HandleMoveRight()
@@ -98,10 +94,6 @@ namespace consolemon_library
             if (main.runGame)
             {
                 main.player.move(1, 0);
-            }
-            else
-            {
-
             }
         }
 

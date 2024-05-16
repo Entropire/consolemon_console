@@ -70,12 +70,29 @@ namespace consolemon_library
             }
 			else if (sceneIndex == 1)
 			{
-				loadedChunks = mapHandeler.LoadChunks(20, 20, player);
+				loadedChunks = mapHandeler.LoadChunks(player);
 				map = mapHandeler.loadMap(player, loadedChunks);
-				map = map.Remove(1620, 1).Insert(1620, "P");
+				map = map.Remove(1620, 1).Insert(1620, "♚");
 			}
 
-			return map;
+			if (sceneIndex == 0)
+			{
+
+			}
+			else if (sceneIndex == 1)
+			{
+
+			}
+            else if (sceneIndex == 2)
+            {
+                
+            }
+			else if (sceneIndex == 3)
+			{
+
+			}
+
+            return map;
 		}
 	}
 }
