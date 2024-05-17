@@ -1,18 +1,22 @@
 ﻿using consolemon_library;
-using System.Diagnostics;
-using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
+using System.Text;
 
 namespace consolemon_console
-{
-    internal class Program
+{ 
+	internal class Program
     {
-        Main main = new Main();
-        ColourKey[] Pallete;
-        static void Main(string[] args)
+		private Main main = new Main();
+        private ColourKey[] Pallete;
+
+		private DateTime lastTime;
+		private int framesRendered;
+		private int fps;
+
+		static void Main(string[] args)
         {
-            Console.CursorVisible = false;
+			Console.CursorVisible = false;
 
             Program program = new Program();
             program.Start();
@@ -29,11 +33,20 @@ namespace consolemon_console
                 new ColourKey(ConsoleColor.DarkMagenta, '_'),
         };
 
-            main.Start(main);
 
             while (true)
             {
-                Console.SetCursorPosition(0, 0);
+				framesRendered++;
+
+				if ((DateTime.Now - lastTime).TotalSeconds >= 1)
+				{
+					fps = framesRendered;
+					framesRendered = 0;
+					lastTime = DateTime.Now;
+					Console.WriteLine(fps);
+				}
+
+				Console.SetCursorPosition(0, 0);
                 string newMap = main.Update();
                 Console.WriteLine(newMap);
             }
@@ -69,7 +82,6 @@ namespace consolemon_console
                 {
                     Console.Write(c);
                 }
-
             }
             Console.ResetColor();
         }

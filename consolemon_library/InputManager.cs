@@ -51,14 +51,14 @@ namespace consolemon_library
 
         private void HandleMoveUp()
         {
-            if (main.runGame)
+            if (main.runGame && !main.gamePaused)
             {
                 main.player.move(0, 1);
             }
             else
             {
                 main.selectedIndex++;
-                if (main.selectedIndex > 1)
+                if (main.selectedIndex > main.scenes[main.sceneIndex].maxSelectedIndex)
                 {
                     main.selectedIndex = 0;
                 }
@@ -66,7 +66,7 @@ namespace consolemon_library
         }
         private void HandleMoveDown()
         {
-            if (main.runGame)
+            if (main.runGame && !main.gamePaused)
             {
                 main.player.move(0, -1);
             }
@@ -76,14 +76,14 @@ namespace consolemon_library
 
                 if (main.selectedIndex < 0)
                 {
-                    main.selectedIndex = 1;
+                    main.selectedIndex = main.scenes[main.sceneIndex].maxSelectedIndex;
                 }
             }
         }
 
         private void HandleMoveLeft()
         {
-            if (main.runGame)
+            if (main.runGame && !main.gamePaused)
             {
                 main.player.move(-1, 0);
             }
@@ -91,7 +91,7 @@ namespace consolemon_library
 
         private void HandleMoveRight()
         {
-            if (main.runGame)
+            if (main.runGame && !main.gamePaused)
             {
                 main.player.move(1, 0);
             }
@@ -99,15 +99,7 @@ namespace consolemon_library
 
         private void HandleEnter()
         {
-            if (main.sceneIndex == 0 && main.selectedIndex == 1)
-            {
-                System.Environment.Exit(0);
-            }
-            else if (main.sceneIndex == 0 && main.selectedIndex == 0)
-            {
-                main.sceneIndex = 1;
-                main.runGame = true;
-            }
+            main.scenes[main.sceneIndex].HandleEnter();
         }
-    }
+	}
 }

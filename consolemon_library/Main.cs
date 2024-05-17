@@ -1,5 +1,4 @@
-﻿using consolemon_console;
-using consolemon_library;
+﻿using consolemon_library;
 using consolemon_library.Objects;
 using System.Numerics;
 
@@ -7,57 +6,81 @@ namespace consolemon_library
 {
     public class Main
 	{
-		internal Scene[] scenes;
+		internal Menu[] menus;
         internal Consolemon[] consolemons;
 		internal InputManager inputManager;
 		internal Dictionary<string, Chunk> loadedChunks;
-		internal MapHandler mapHandler;
+		internal MapHandler mapHandler = new MapHandler();
         internal Player player;
 		internal bool runGame = false;
+		internal bool gamePaused = false;
 		internal int selectedIndex = 1;
-		internal int sceneIndex = 0;
-
-
-        public void Start(Main main)
+		internal int menuIndex = 1;
+		internal int lastMenuIndex = 0;
+        public Main()
 		{
 			FileHandler fileHandler = new FileHandler();
-			inputManager = new InputManager(main);
-			scenes = fileHandler.LoadFile<Scene[]>("assets/scenes.json");
+			inputManager = new InputManager(this);
+			menus = fileHandler.LoadFile<Menu[]>("assets/scenes.json");
 			consolemons = fileHandler.LoadFile<Consolemon[]>("assets/consolemons.json");
 			player = new Player(0, 0);
-			mapHandler = new MapHandler();
+
+			Menu MainMenu = new Menu(" ", 4);
+			MainMenu.menuOptions[0].OnOptionSelected = (item) => {
+				Environment.Exit(0);
+			};
 		}
 
 		public string Update() 
 		{
-			string map = scenes[sceneIndex].map;
+			if (Console.WindowHeight == 56 && Console.WindowWidth == 209)
+			{
+				menuIndex = lastMenuIndex;
+			}
+			else
+			{
+				if (runGame)
+				{
+					lastMenuIndex = 0;
+				}
+				else
+				{
+					lastMenuIndex = 2;
+				}
+				menuIndex = 1;
+			}
+
+			string map = menus[menuIndex].map;
 			inputManager.HandleKeyInputs();
-            map = SceneManager(map);
+            map = MenueManager(map);
 			return map;
 		}
 
-		private string SceneManager(string map)
+		private void CreateMenus()
 		{
-			if (sceneIndex == 1)
+
+		}
+
+		private string MenueManager(string map)
+		{
+			if (menuIndex == 0)
 			{
-				loadedChunks = mapHandler.LoadChunks(player);
-				map = mapHandler.loadMap(player, loadedChunks);
-				map = map.Remove(1620, 1).Insert(1620, "P");
+
 			}
-			else if (sceneIndex == 0 || sceneIndex == 2)
+			else if (menuIndex == 2 || menuIndex == 3)
 			{
-				map = setArrow(map, "__     __\\ \\   / / \\ \\ / /  / / \\ \\ /_/   \\_\\");
+				map = setArrow(map, selectedIndex, "__     __\\ \\   / / \\ \\ / /  / / \\ \\ /_/   \\_\\");
 			}
-			else if (sceneIndex == 3 || sceneIndex == 4)
+			else if (menuIndex == 4 || menuIndex == 5)
 			{
-				map = setArrow(map, "__  \\ \\  \\ \\ / //_/ ");
+				map = setArrow(map, selectedIndex, "__  \\ \\  \\ \\ / //_/ ");
 			}
 
 			map.Replace("#", " ");
 			return map;
 		}
 
-		private string setArrow(string map, string arrow)
+		private string setArrow(string map, int selectedIndex, string arrow)
 		{
 			for (int i = 0; i < arrow.Length; i++)
 			{
