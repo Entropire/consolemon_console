@@ -1,5 +1,7 @@
 ﻿using consolemon_console;
+using consolemon_library;
 using consolemon_library.Objects;
+using System.Numerics;
 
 namespace consolemon_library
 {
@@ -9,10 +11,10 @@ namespace consolemon_library
         internal Consolemon[] consolemons;
 		internal InputManager inputManager;
 		internal Dictionary<string, Chunk> loadedChunks;
-
+		internal MapHandler mapHandler;
         internal Player player;
 		internal bool runGame = false;
-		internal int selectorIndex = 0;
+		internal int selectedIndex = 1;
 		internal int sceneIndex = 0;
 
 
@@ -23,6 +25,7 @@ namespace consolemon_library
 			scenes = fileHandler.LoadFile<Scene[]>("assets/scenes.json");
 			consolemons = fileHandler.LoadFile<Consolemon[]>("assets/consolemons.json");
 			player = new Player(0, 0);
+			mapHandler = new MapHandler();
 		}
 
 		public string Update() 
@@ -35,45 +38,46 @@ namespace consolemon_library
 
 		private string SceneManager(string map)
 		{
-			MapHandler mapHandeler = new MapHandler();
-			string arrows = "__      __\\ \\    / / \\ \\  / /   > >< <   / /  \\ \\ /_/    \\_\\";
-			string character = "";
-            if (sceneIndex == 0)
+			if (sceneIndex == 1)
 			{
-				if (selectorIndex == 0)
-				{
-					character = "#";
-                    map = map.Replace("@", " ");
-                }
-				else
-				{
-					character = "@";
-					map = map.Replace("#", " ");
-
-                }
-
-                for (int i = 0; i < arrows.Length; i++)
-                {
-                    char replacementChar = arrows[i];
-
-                    int index = map.IndexOf(character);
-
-                    if (index != -1)
-                    {
-                        map = map.Remove(index, 1).Insert(index, replacementChar.ToString());
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-			else if (sceneIndex == 1)
-			{
-				loadedChunks = mapHandeler.LoadChunks(20, 20, player);
-				map = mapHandeler.loadMap(player, loadedChunks);
+				loadedChunks = mapHandler.LoadChunks(player);
+				map = mapHandler.loadMap(player, loadedChunks);
 				map = map.Remove(1620, 1).Insert(1620, "P");
 			}
+			else if (sceneIndex == 0 || sceneIndex == 2)
+			{
+				map = setArrow(map, "__     __\\ \\   / / \\ \\ / /  / / \\ \\ /_/   \\_\\");
+			}
+			else if (sceneIndex == 3 || sceneIndex == 4)
+			{
+				map = setArrow(map, "__  \\ \\  \\ \\ / //_/ ");
+			}
+
+			map.Replace("#", " ");
+			return map;
+		}
+
+		private string setArrow(string map, string arrow)
+		{
+			for (int i = 0; i < arrow.Length; i++)
+			{
+				char replacementChar = arrow[i];
+
+				int index = map.IndexOf("#");
+
+				if (index != -1)
+				{
+					map = map.Remove(index, 1).Insert(index, replacementChar.ToString());
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			map = map.Replace("@", " ");
+			map = map.Replace("#", " ");
+			map = map.Replace("$", " ");
 
 			return map;
 		}

@@ -57,10 +57,10 @@ namespace consolemon_library
             }
             else
             {
-                main.selectorIndex++;
-                if (main.selectorIndex > 1)
+                main.selectedIndex++;
+                if (main.selectedIndex > 1)
                 {
-                    main.selectorIndex = 0;
+                    main.selectedIndex = 0;
                 }
             }
         }
@@ -72,11 +72,11 @@ namespace consolemon_library
             }
             else
             {
-                main.selectorIndex--;
+                main.selectedIndex--;
 
-                if (main.selectorIndex < 0)
+                if (main.selectedIndex < 0)
                 {
-                    main.selectorIndex = 1;
+                    main.selectedIndex = 1;
                 }
             }
         }
@@ -107,11 +107,11 @@ namespace consolemon_library
 
         private void HandleEnter()
         {
-            if (main.sceneIndex == 0 && main.selectorIndex == 1)
+            if (main.sceneIndex == 0 && main.selectedIndex == 1)
             {
                 System.Environment.Exit(0);
             }
-            else if (main.sceneIndex == 0 && main.selectorIndex == 0)
+            else if (main.sceneIndex == 0 && main.selectedIndex == 0)
             {
                 main.sceneIndex = 1;
                 main.runGame = true;
