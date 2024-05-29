@@ -1,92 +1,134 @@
-﻿using consolemon_library;
-using consolemon_library.Objects;
-using System.Numerics;
+﻿using consolemon_library.Objects;
+using System.Diagnostics;
+using System.Security.Principal;
 
 namespace consolemon_library
 {
     public class Main
 	{
-		internal Menu[] menus;
-        internal Consolemon[] consolemons;
-		internal InputManager inputManager;
-		internal Dictionary<string, Chunk> loadedChunks;
-		internal MapHandler mapHandler = new MapHandler();
-        internal Player player;
-		internal bool runGame = false;
-		internal bool gamePaused = false;
-		internal int selectedIndex = 1;
-		internal int menuIndex = 1;
-		internal int lastMenuIndex = 0;
-        public Main()
-		{
-			FileHandler fileHandler = new FileHandler();
-			inputManager = new InputManager(this);
-			menus = fileHandler.LoadFile<Menu[]>("assets/scenes.json");
-			consolemons = fileHandler.LoadFile<Consolemon[]>("assets/consolemons.json");
-			player = new Player(0, 0);
+		FileHandler fileHandler = new FileHandler();
+		InputManager inputManager;
 
-			Menu MainMenu = new Menu(" ", 4);
-			MainMenu.menuOptions[0].OnOptionSelected = (item) => {
+		internal Menu[] menus;
+		internal int menuIndex = 2;
+		internal bool runGame;
+		private bool programRunning = true;
+		private int oldMenuIndex;
+
+		public Main()
+		{
+			inputManager = new InputManager(this);
+			LoadMenus();
+		}
+
+		public void LoadMenus()
+		{
+			MenuOption startGame = new MenuOption();
+			startGame.OnOptionSelected = (item) =>
+			{
+				menuIndex = 0;
+			};
+
+			MenuOption resumeGame = new MenuOption();
+			resumeGame.OnOptionSelected = (item) =>
+			{
+				menuIndex = 0;
+			};
+
+			MenuOption openSettings = new MenuOption();
+			openSettings.OnOptionSelected = (item) =>
+			{
+				menuIndex = 3;
+			};
+
+			MenuOption closeSettings = new MenuOption();
+			closeSettings.OnOptionSelected = (item) =>
+			{
+				if (runGame)
+				{
+					menuIndex = 0;
+				}
+				else
+				{
+					menuIndex = 2;
+				}
+			};
+
+			MenuOption openMainMenu = new MenuOption();
+			openMainMenu.OnOptionSelected = (item) =>
+			{
+				menuIndex = 2;
+			};
+
+			MenuOption closeGame = new MenuOption();
+			closeGame.OnOptionSelected = (item) =>
+			{
 				Environment.Exit(0);
 			};
+
+			string[] menu_maps = fileHandler.LoadFile<string[]>("assets\\menuMaps.json");
+			Menu game = new Menu(menu_maps[0], []);
+			Menu notFullScreen = new Menu(menu_maps[1], []);
+			Menu mainMenu = new Menu(menu_maps[2], [startGame, openSettings, closeGame]);
+			Menu settings = new Menu(menu_maps[3], [closeSettings]);
+			Menu pause = new Menu(menu_maps[4], [resumeGame, openSettings, openMainMenu]);
+
+			menus = [game, notFullScreen,mainMenu, settings, pause];
 		}
 
 		public string Update() 
 		{
-			if (Console.WindowHeight == 56 && Console.WindowWidth == 209)
-			{
-				menuIndex = lastMenuIndex;
-			}
-			else
-			{
-				if (runGame)
-				{
-					lastMenuIndex = 0;
-				}
-				else
-				{
-					lastMenuIndex = 2;
-				}
+			inputManager.HandleKeyInputs();
+
+			if ((Console.WindowHeight < 51 || Console.WindowWidth < 209) && programRunning)
+			{ 
+				Console.Clear();
+				programRunning = false;
+				oldMenuIndex = menuIndex;
 				menuIndex = 1;
+			}
+			else if ((Console.WindowHeight == 51 || Console.WindowWidth == 209) && !programRunning)
+			{
+				Console.Clear();
+				programRunning = true;
+				menuIndex = oldMenuIndex;
 			}
 
 			string map = menus[menuIndex].map;
-			inputManager.HandleKeyInputs();
-            map = MenueManager(map);
+
+			map = setArrow(map);
+
 			return map;
 		}
 
-		private void CreateMenus()
+		private string setArrow(string map)
 		{
+			string[] arrow;
 
-		}
-
-		private string MenueManager(string map)
-		{
-			if (menuIndex == 0)
+			if (menuIndex == 3)
 			{
-
+				arrow = ["__..\\ \\..\\ \\./ //_/.","........................"];
 			}
-			else if (menuIndex == 2 || menuIndex == 3)
+			else
 			{
-				map = setArrow(map, selectedIndex, "__     __\\ \\   / / \\ \\ / /  / / \\ \\ /_/   \\_\\");
-			}
-			else if (menuIndex == 4 || menuIndex == 5)
-			{
-				map = setArrow(map, selectedIndex, "__  \\ \\  \\ \\ / //_/ ");
+				arrow = ["__..\\ \\..\\ \\./ //_/.", "..__./ // /.\\ \\..\\_\\"];
 			}
 
-			map.Replace("#", " ");
+			map = replaceGroupOfCharacters(map, arrow[0], "#");
+			map = replaceGroupOfCharacters(map, arrow[1], "@");
 			return map;
 		}
 
-		private string setArrow(string map, int selectedIndex, string arrow)
-		{
-			for (int i = 0; i < arrow.Length; i++)
-			{
-				char replacementChar = arrow[i];
 
-				int index = map.IndexOf("#");
+		private string replaceGroupOfCharacters(string map, string characters, string character)
+		{
+			int charactersToSkip = characters.Length * menus[menuIndex].selectedIndex;
+
+			for (int i = 0; i < characters.Length; i++)
+			{
+				char replacementChar = characters[i];
+
+				int index = getCharacterPosition(map, character, charactersToSkip);
 
 				if (index != -1)
 				{
@@ -97,12 +139,28 @@ namespace consolemon_library
 					break;
 				}
 			}
-
-			map = map.Replace("@", " ");
-			map = map.Replace("#", " ");
-			map = map.Replace("$", " ");
+			map = map.Replace(character, ".");
 
 			return map;
 		}
+
+		private int getCharacterPosition(string map, string character, int amountToSkip)
+		{
+			int amountFound = 0;
+			int index = -1; 
+			while (amountFound <= amountToSkip)
+			{
+				index = map.IndexOf(character, index + 1); 
+				if (index == -1) 
+				{
+					break;
+				}
+				amountFound++;
+			}
+			return index;
+		}
 	}
 }
+
+
+

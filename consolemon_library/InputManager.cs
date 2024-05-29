@@ -1,18 +1,13 @@
-﻿using consolemon_console;
-using consolemon_library.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
+﻿using consolemon_library.Objects;
+
 namespace consolemon_library
 {
     internal class InputManager
     {
         private Main main;
-        
-        public InputManager(Main main) 
-        { 
+
+        public InputManager(Main main)
+        {
             this.main = main;
         }
 
@@ -22,84 +17,85 @@ namespace consolemon_library
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
 
+                Menu menu = main.menus[main.menuIndex];
+
                 switch (key.Key)
                 {
                     case ConsoleKey.UpArrow:
                     case ConsoleKey.W:
-                        HandleMoveUp();
+                        HandleMoveUp(menu);
                         break;
                     case ConsoleKey.DownArrow:
                     case ConsoleKey.S:
-                        HandleMoveDown();
+                        HandleMoveDown(menu);
                         break;
                     case ConsoleKey.RightArrow:
                     case ConsoleKey.D:
-                        HandleMoveLeft();
+                        HandleMoveLeft(menu);
                         break;
                     case ConsoleKey.LeftArrow:
                     case ConsoleKey.A:
-                        HandleMoveRight();
+                        HandleMoveRight(menu);
                         break;
                     case ConsoleKey.Escape:
                         break;
                     case ConsoleKey.Enter:
-                        HandleEnter();
+                        HandleEnter(menu);
                         break;
                 }
             }
         }
 
-        private void HandleMoveUp()
+        private void HandleMoveUp(Menu menu)
         {
-            if (main.runGame && !main.gamePaused)
+            if (main.runGame)
             {
-                main.player.move(0, 1);
+
             }
             else
             {
-                main.selectedIndex++;
-                if (main.selectedIndex > main.scenes[main.sceneIndex].maxSelectedIndex)
-                {
-                    main.selectedIndex = 0;
-                }
-            }
+				menu.selectedIndex--;
+				if (menu.selectedIndex < 0)
+				{
+					menu.selectedIndex = menu.maxSelectedIndex;
+				}
+			}
         }
-        private void HandleMoveDown()
+        private void HandleMoveDown(Menu menu)
         {
-            if (main.runGame && !main.gamePaused)
+            if (main.runGame)
             {
-                main.player.move(0, -1);
+                
             }
             else
             {
-                main.selectedIndex--;
-
-                if (main.selectedIndex < 0)
-                {
-                    main.selectedIndex = main.scenes[main.sceneIndex].maxSelectedIndex;
-                }
-            }
+				menu.selectedIndex++;
+				if (menu.selectedIndex > menu.maxSelectedIndex)
+				{
+					menu.selectedIndex = 0;
+				}
+			}
         }
 
-        private void HandleMoveLeft()
+        private void HandleMoveLeft(Menu menu)
         {
-            if (main.runGame && !main.gamePaused)
+            if (main.runGame)
             {
-                main.player.move(-1, 0);
+
             }
         }
 
-        private void HandleMoveRight()
+        private void HandleMoveRight(Menu menu)
         {
-            if (main.runGame && !main.gamePaused)
-            {
-                main.player.move(1, 0);
+            if (main.runGame)
+            { 
+
             }
         }
 
-        private void HandleEnter()
+        private void HandleEnter(Menu menu)
         {
-            main.scenes[main.sceneIndex].HandleEnter();
-        }
-	}
+			menu.menuOptions[menu.selectedIndex].OnOptionSelected.Invoke(menu.menuOptions[menu.selectedIndex]);
+		}
+    }
 }

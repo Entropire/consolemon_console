@@ -7,28 +7,19 @@ using System.Threading.Tasks;
 
 namespace consolemon_library.Objects
 {
-	internal class Menu
+    internal class Menu
 	{
-		public string map { get; set; }
+		public string map;
 		public int maxSelectedIndex;
-		public List<MenuOption> menuOptions { get; } = new List<MenuOption>();
-		public int selectedIndex { get; set; } = 0;
+		public List<MenuOption> menuOptions;
+		public int selectedIndex = 0;
 
-		public Menu(string map, int optionAmount)
+		public Menu(string map, List<MenuOption> menuOptions)
 		{
 			this.map = map;
 
-			maxSelectedIndex = optionAmount;
-
-			for (int i = 0; i < optionAmount; i++)
-			{
-				this.menuOptions[i] = new MenuOption();
-			}
-		}
-
-		public void HandleEnter()
-		{
-
+			this.menuOptions = menuOptions;
+			this.maxSelectedIndex = menuOptions.Count - 1;
 		}
 	}
 }

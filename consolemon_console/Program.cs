@@ -10,10 +10,6 @@ namespace consolemon_console
 		private Main main = new Main();
         private ColourKey[] Pallete;
 
-		private DateTime lastTime;
-		private int framesRendered;
-		private int fps;
-
 		static void Main(string[] args)
         {
 			Console.CursorVisible = false;
@@ -36,16 +32,6 @@ namespace consolemon_console
 
             while (true)
             {
-				framesRendered++;
-
-				if ((DateTime.Now - lastTime).TotalSeconds >= 1)
-				{
-					fps = framesRendered;
-					framesRendered = 0;
-					lastTime = DateTime.Now;
-					Console.WriteLine(fps);
-				}
-
 				Console.SetCursorPosition(0, 0);
                 string newMap = main.Update();
                 Console.WriteLine(newMap);
