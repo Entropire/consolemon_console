@@ -22,11 +22,12 @@ namespace consolemon_console
         {
             Pallete = new ColourKey[]
             {
-                new ColourKey(ConsoleColor.Red, '~'),
-                new ColourKey(ConsoleColor.Green, '`'),
-                new ColourKey(ConsoleColor.Blue, '^'),
-                new ColourKey(ConsoleColor.Yellow, '*'),
-                new ColourKey(ConsoleColor.DarkMagenta, '_'),
+                new ColourKey(ConsoleColor.Red, 'ぁ'),
+                new ColourKey(ConsoleColor.Green, 'あ'),
+                new ColourKey(ConsoleColor.Blue, 'ぃ'),
+                new ColourKey(ConsoleColor.Yellow, 'い'),
+                new ColourKey(ConsoleColor.DarkMagenta, 'ぅ'),
+                new ColourKey(ConsoleColor.White, 'う')
         };
 
 
@@ -34,7 +35,7 @@ namespace consolemon_console
             {
 				Console.SetCursorPosition(0, 0);
                 string newMap = main.Update();
-                Console.WriteLine(newMap);
+                ColorWrite(newMap);
             }
         }
 

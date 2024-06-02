@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace consolemon_library
 {
-    public class FileHandler
+    public static class FileHandler
 	{
-		public T LoadFile<T>(string dir)
+		public static T LoadFile<T>(string dir)
 		{
 			try
 			{
@@ -29,7 +29,7 @@ namespace consolemon_library
 			return default;
 		}
 
-        public void SaveFile<T>(T fileData, string dir, string filename) 
+        public static void SaveFile<T>(T fileData, string dir, string filename) 
 		{
 			string programDir = new FileInfo(typeof(Consolemon).Assembly.Location).DirectoryName;
 			string path = Path.Combine(programDir, dir);

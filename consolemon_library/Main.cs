@@ -1,12 +1,9 @@
 ﻿using consolemon_library.Objects;
-using System.Diagnostics;
-using System.Security.Principal;
 
 namespace consolemon_library
 {
     public class Main
 	{
-		FileHandler fileHandler = new FileHandler();
 		InputManager inputManager;
 
 		internal Menu[] menus;
@@ -66,7 +63,7 @@ namespace consolemon_library
 				Environment.Exit(0);
 			};
 
-			string[] menu_maps = fileHandler.LoadFile<string[]>("assets\\menuMaps.json");
+			string[] menu_maps = FileHandler.LoadFile<string[]>("assets\\menuMaps.json");
 			Menu game = new Menu(menu_maps[0], []);
 			Menu notFullScreen = new Menu(menu_maps[1], []);
 			Menu mainMenu = new Menu(menu_maps[2], [startGame, openSettings, closeGame]);
@@ -87,7 +84,7 @@ namespace consolemon_library
 				oldMenuIndex = menuIndex;
 				menuIndex = 1;
 			}
-			else if ((Console.WindowHeight == 51 || Console.WindowWidth == 209) && !programRunning)
+			else if ((Console.WindowHeight >= 51 || Console.WindowWidth >= 209) && !programRunning)
 			{
 				Console.Clear();
 				programRunning = true;
