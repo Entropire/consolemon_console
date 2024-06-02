@@ -1,6 +1,6 @@
 ﻿using consolemon_library.Objects;
 
-namespace consolemon_library
+namespace consolemon_library.old
 {
     internal class InputManager
     {
@@ -54,27 +54,27 @@ namespace consolemon_library
             }
             else
             {
-				menu.selectedIndex--;
-				if (menu.selectedIndex < 0)
-				{
-					menu.selectedIndex = menu.maxSelectedIndex;
-				}
-			}
+                menu.selectedIndex--;
+                if (menu.selectedIndex < 0)
+                {
+                    menu.selectedIndex = menu.maxSelectedIndex;
+                }
+            }
         }
         private void HandleMoveDown(Menu menu)
         {
             if (main.runGame)
             {
-                
+
             }
             else
             {
-				menu.selectedIndex++;
-				if (menu.selectedIndex > menu.maxSelectedIndex)
-				{
-					menu.selectedIndex = 0;
-				}
-			}
+                menu.selectedIndex++;
+                if (menu.selectedIndex > menu.maxSelectedIndex)
+                {
+                    menu.selectedIndex = 0;
+                }
+            }
         }
 
         private void HandleMoveLeft(Menu menu)
@@ -88,14 +88,14 @@ namespace consolemon_library
         private void HandleMoveRight(Menu menu)
         {
             if (main.runGame)
-            { 
+            {
 
             }
         }
 
         private void HandleEnter(Menu menu)
         {
-			menu.menuOptions[menu.selectedIndex].OnOptionSelected.Invoke(menu.menuOptions[menu.selectedIndex]);
-		}
+            menu.menuOptions[menu.selectedIndex].OnOptionSelected.Invoke(menu.menuOptions[menu.selectedIndex]);
+        }
     }
 }

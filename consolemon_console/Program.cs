@@ -1,13 +1,14 @@
-﻿using consolemon_library;
+﻿using consolemon_library.old;
+using consolemon_library.old.Objects;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 
 namespace consolemon_console
-{ 
-	internal class Program
+{
+    internal class Program
     {
-		private Main main = new Main();
+		private consolemon_library.Consolemon consolemon = new consolemon_library.Consolemon();
         private ColourKey[] Pallete;
 
 		static void Main(string[] args)
@@ -34,7 +35,7 @@ namespace consolemon_console
             while (true)
             {
 				Console.SetCursorPosition(0, 0);
-                string newMap = main.Update();
+                string newMap = consolemon.Update(consolemon.GetMenuHandler());
                 ColorWrite(newMap);
             }
         }

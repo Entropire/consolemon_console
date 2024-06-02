@@ -1,7 +1,7 @@
 ﻿namespace consolemon_library.Objects
 {
-    public class MenuOption
+    internal class MenuOption
     {
-        public Action<MenuOption> OnOptionSelected;
+        internal Action<MenuOption>? OnOptionSelected;
     }
 }

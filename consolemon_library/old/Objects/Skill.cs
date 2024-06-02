@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace consolemon_library.Objects
+namespace consolemon_library.old.Objects
 {
     public class Skill
     {

@@ -4,14 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace consolemon_library
+namespace consolemon_library.old.Objects
 {
-	public enum Elements
-	{
-		Fire,
-		Water,
-		Earth,
-		Physical,
-		Wind
-	}
+    internal class Chunk
+    {
+    }
 }

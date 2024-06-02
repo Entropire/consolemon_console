@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices.Marshalling;
 
-namespace consolemon_library.Objects
+namespace consolemon_library.old.Objects
 {
     public class Player
     {
@@ -21,8 +21,8 @@ namespace consolemon_library.Objects
         {
             this.x += x;
             this.y += y;
-			this.innerChunkX += x;
-			this.innerChunkY += y;
+            innerChunkX += x;
+            innerChunkY += y;
 
             if (innerChunkX > 15)
             {
@@ -35,17 +35,17 @@ namespace consolemon_library.Objects
                 chunkX++;
             }
 
-			if (innerChunkY > 15)
-			{
-				innerChunkY = 0;
-				chunkY--;
-			}
-			if (innerChunkY < 0)
-			{
-				innerChunkY = 15;
-				chunkY++;
-			}
+            if (innerChunkY > 15)
+            {
+                innerChunkY = 0;
+                chunkY--;
+            }
+            if (innerChunkY < 0)
+            {
+                innerChunkY = 15;
+                chunkY++;
+            }
 
-		}
+        }
     }
 }

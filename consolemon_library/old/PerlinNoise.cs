@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace consolemon_library
+namespace consolemon_library.old
 {
     internal static class PerlinNoise
     {
