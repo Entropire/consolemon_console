@@ -1,10 +1,4 @@
-﻿using consolemon_library.old;
-using consolemon_library.old.Objects;
-using System.Runtime.InteropServices;
-using System.Security.Principal;
-using System.Text;
-
-namespace consolemon_console
+﻿namespace consolemon_console
 {
     internal class Program
     {
@@ -32,10 +26,10 @@ namespace consolemon_console
         };
 
 
-            while (true)
+            while (true) // game loop
             {
 				Console.SetCursorPosition(0, 0);
-                string newMap = consolemon.Update(consolemon.GetMenuHandler());
+                string newMap = consolemon.Update();
                 ColorWrite(newMap);
             }
         }

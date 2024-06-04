@@ -4,20 +4,18 @@ namespace consolemon_library.old
 {
     internal class InputManager
     {
-        private Main main;
+        private Consolemon consolemon;
 
-        public InputManager(Main main)
+        public InputManager(Consolemon consolemon)
         {
-            this.main = main;
+            this.consolemon = consolemon;
         }
 
-        internal void HandleKeyInputs()
+        internal void HandleKeyInputs(Menu menu )
         {
             if (Console.KeyAvailable)
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
-
-                Menu menu = main.menus[main.menuIndex];
 
                 switch (key.Key)
                 {
@@ -48,7 +46,7 @@ namespace consolemon_library.old
 
         private void HandleMoveUp(Menu menu)
         {
-            if (main.runGame)
+            if (consolemon.runGame)
             {
 
             }
@@ -63,7 +61,7 @@ namespace consolemon_library.old
         }
         private void HandleMoveDown(Menu menu)
         {
-            if (main.runGame)
+            if (consolemon.runGame)
             {
 
             }
@@ -79,7 +77,7 @@ namespace consolemon_library.old
 
         private void HandleMoveLeft(Menu menu)
         {
-            if (main.runGame)
+            if (consolemon.runGame)
             {
 
             }
@@ -87,7 +85,7 @@ namespace consolemon_library.old
 
         private void HandleMoveRight(Menu menu)
         {
-            if (main.runGame)
+            if (consolemon.runGame)
             {
 
             }

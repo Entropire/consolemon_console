@@ -1,20 +1,29 @@
 ﻿using consolemon_library.Objects;
 using consolemon_library.old;
+using System.Runtime.CompilerServices;
 
 namespace consolemon_library
 {
     public class Consolemon
     {
-        private static MenuHandler menuHandler = new MenuHandler();
+        private static MenuHandler? menuHandler;
+        private static InputManager? inputManager;
+        private static MapHandler mapHandler = new MapHandler(8, 8);
+        private static Player player = new Player();
 
-        public bool runApp = true;
-        private bool runGame = false;
+		private Dictionary<string, Chunk> loadedChunks = new Dictionary<string, Chunk>();
 
-        internal static Menu[]? menus;
+		public bool runApp = true;
+        public bool runGame = false;
+
+        internal Menu[]? menus;
         internal int menuIndex = 2;
         private int oldMenuIndex;
         public Consolemon()
         {
+            menuHandler = new MenuHandler(this);
+            inputManager = new InputManager(this);
+            
             menus = LoadMenus();
         }
 
@@ -24,12 +33,14 @@ namespace consolemon_library
             startGame.OnOptionSelected = (item) =>
             {
                 menuIndex = 0;
+                runGame = true;
             };
 
             MenuOption resumeGame = new MenuOption();
             resumeGame.OnOptionSelected = (item) =>
             {
                 menuIndex = 0;
+                runGame = true;
             };
 
             MenuOption openSettings = new MenuOption();
@@ -41,14 +52,7 @@ namespace consolemon_library
             MenuOption closeSettings = new MenuOption();
             closeSettings.OnOptionSelected = (item) =>
             {
-                if (true) //not done yet
-                {
-                    menuIndex = 0;
-                }
-                else
-                {
-                    menuIndex = 2;
-                }
+                menuIndex = 2;
             };
 
             MenuOption openMainMenu = new MenuOption();
@@ -89,9 +93,17 @@ namespace consolemon_library
                 menuIndex = oldMenuIndex;
             }
 
-            string map = menuHandler.loadMenu(menus[menuIndex].map); 
+			Menu menu = menus[menuIndex];
 
-            return map;
+            if (runGame == true)
+            {
+                loadedChunks = mapHandler.LoadChunks(player, loadedChunks);
+            }
+
+			string map = menuHandler.loadMenu(menu);
+			inputManager.HandleKeyInputs(menu);
+
+			return map;
         }
     }
 }

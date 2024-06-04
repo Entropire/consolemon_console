@@ -1,11 +1,4 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace consolemon_library.Objects
+﻿namespace consolemon_library.Objects
 {
     internal class Menu
     {
