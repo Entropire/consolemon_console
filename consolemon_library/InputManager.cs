@@ -48,7 +48,7 @@ namespace consolemon_library.old
         {
             if (consolemon.runGame)
             {
-
+                consolemon.player.Move(0, -1);
             }
             else
             {
@@ -63,7 +63,7 @@ namespace consolemon_library.old
         {
             if (consolemon.runGame)
             {
-
+                consolemon.player.Move(0, 1);
             }
             else
             {
@@ -79,7 +79,7 @@ namespace consolemon_library.old
         {
             if (consolemon.runGame)
             {
-
+                consolemon.player.Move(1, 0);
             }
         }
 
@@ -87,7 +87,7 @@ namespace consolemon_library.old
         {
             if (consolemon.runGame)
             {
-
+                consolemon.player.Move(-1, 0);
             }
         }
 

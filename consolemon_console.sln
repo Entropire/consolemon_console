@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "consolemon_console", "consolemon_console\consolemon_console.csproj", "{08583876-4189-425D-AC00-E5EB036C1E3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "consolemon_console", "consolemon_console\consolemon_console.csproj", "{08583876-4189-425D-AC00-E5EB036C1E3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "consolemon_library", "consolemon_library\consolemon_library.csproj", "{A5E7AD0C-DF27-4734-9379-19BC6C1DDEF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "consolemon_library", "consolemon_library\consolemon_library.csproj", "{A5E7AD0C-DF27-4734-9379-19BC6C1DDEF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

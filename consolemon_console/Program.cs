@@ -1,11 +1,15 @@
-﻿namespace consolemon_console
+﻿using System.Diagnostics;
+
+namespace consolemon_console
 {
     internal class Program
     {
 		private consolemon_library.Consolemon consolemon = new consolemon_library.Consolemon();
         private ColourKey[] Pallete;
 
-		static void Main(string[] args)
+        Stopwatch stopwatch = new Stopwatch();
+
+        static void Main(string[] args)
         {
 			Console.CursorVisible = false;
 
@@ -26,11 +30,14 @@
         };
 
 
-            while (true) // game loop
+            while (true) 
             {
+                stopwatch.Restart();
 				Console.SetCursorPosition(0, 0);
                 string newMap = consolemon.Update();
-                ColorWrite(newMap);
+                Console.WriteLine(newMap);
+                stopwatch.Stop();
+                Console.WriteLine($"\nframe: {stopwatch.Elapsed}");
             }
         }
 

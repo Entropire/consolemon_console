@@ -16,7 +16,6 @@ namespace consolemon_library
         {
             if (program.runGame)
             {
-
                 return menu.map;
 			}
             else

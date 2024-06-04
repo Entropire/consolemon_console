@@ -5,42 +5,86 @@ namespace consolemon_library
 {
 	internal class MapHandler
 	{
-		private int index = 0;
-		private int chunkHeight;
-		private int chunkWidth;
+        private int index = 0;
 
-
-		public MapHandler(int chunkHeight, int chunkWidth)
+		internal string LoadMap(Player player, Dictionary<string, Chunk> loadedChunks, string map)
 		{
-			this.chunkHeight = chunkHeight;
-			this.chunkWidth = chunkWidth;
-		}
+			string gameMap = "";
 
-		internal string LoadMap(Player player, Dictionary<string, Chunk> loadedChunks)
-		{
-			double worldPosX = (player.local.x) / chunkWidth;
-			double worldPosY = (player.local.y) / chunkHeight;
+            int worldPosX = player.world.x + -103;
+            int worldPosY = player.world.y + -16;
 
-			double chunkPosX = Math.Floor(worldPosX);
-			double chunkPosY = Math.Floor(worldPosY);
+            int chunkPosX = (player.chunk.x + (worldPosX / 8));
+            int chunkPosY = (player.chunk.y + (worldPosY / 8));
 
-			double localPosX = 16 + ((worldPosX - chunkPosX) * chunkWidth);
-			double localPosY = 16 + ((worldPosY - chunkPosY) * chunkHeight);
+            int localPosX = (worldPosX % 8 + 8) % 8;
+            int localPosY = (worldPosY % 8 + 8) % 8;
 
-			
+            for (int i = 0; i < 34; i++)
+			{
+				double chunkX = chunkPosX;
+				double localX = localPosX;
+				for (int j = 0; j < 207; j++)
+				{
+					if (loadedChunks.TryGetValue($"chunk_{chunkX}_{chunkPosY}", out Chunk? chunk))
+					{
+						gameMap += chunk.map[(int)localPosY][(int)localX];
+					}
+					else
+					{
+						Console.Clear();
+						Console.WriteLine($"could not find chunk_{chunkX}_{chunkPosY}!");
+						Console.ReadLine();
+					}
+
+					localX++;
+					if (localX >= 8)
+					{
+						localX = 0;
+						chunkX++;
+					}
+				}
+
+                localPosY++;
+                if (localPosY >= 8)
+                {
+                    localPosY = 0;
+                    chunkPosY++;
+                }
+            }
+
+			for (int i = 0; i < gameMap.Length; i++)
+			{
+				int charIndex = map.IndexOf("Q");
+
+				if (i != 3415)
+				{
+					map = map.Remove(charIndex, 1).Insert(charIndex, gameMap[i].ToString());
+				}
+				else
+				{
+					map = map.Remove(charIndex, 1).Insert(charIndex, "P");
+				}
+
+			}
+
+			return map;
 		}
 
 		internal Dictionary<string, Chunk> LoadChunks(Player player, Dictionary<string, Chunk> loadedChunks)
 		{
 			Dictionary<string, Chunk> newLoadedChunks = new Dictionary<string, Chunk>();
 
-			int chunk_X = player.chunk.x - player.renderDistance;
-			int chunk_Y = player.chunk.y - player.renderDistance;
+			int renderDistanceX = (int)Math.Ceiling((double)Console.WindowWidth / 8);
+			int renderDiscanceY = (int)Math.Ceiling((double)Console.WindowHeight / 8);
 
-			for (int i = 0 - player.renderDistance; i < player.renderDistance; i++)
+			int chunk_X = player.chunk.x - renderDistanceX / 2;
+			int chunk_Y = player.chunk.y - renderDiscanceY / 2;
+
+			for (int i = 0; i < renderDiscanceY + 1; i++)
 			{
 				int x = chunk_X;
-				for (int j = 0 - player.renderDistance; j < player.renderDistance; j++)
+				for (int j = 0; j < renderDistanceX + 1; j++)
 				{
 					string chunkName = $"chunk_{x}_{chunk_Y}";
 					if (loadedChunks.TryGetValue(chunkName, out Chunk? chunk))
@@ -67,13 +111,17 @@ namespace consolemon_library
 
 		private Chunk GenerateChunk(Vector chunkPos)
 		{
-			string[] characters = { "!", "@", "#", "$", "%", "^", "&", "*", "(", "-", "+"};
+			string[] characters = { "!", "@", "#", "$", };
 
-			string[] map = new string[chunkHeight * chunkWidth];
+			string[][] map = new string[8][];
 
-			for (int i = 0; i < chunkHeight * chunkWidth; i++)
+			for (int i = 0; i < 8; i++)
 			{
-				map[i] = characters[index];
+				map[i] = new string[8];
+				for (int j = 0; j < 8; j++)
+				{
+					map[i][j] = characters[index];
+				}
 			}
 
 			Chunk chunk = new Chunk(chunkPos, map);
