@@ -109,10 +109,10 @@ namespace consolemon_library
 
             Stopwatch stopwatch = new Stopwatch();
 
-			Menu menu = menus[menuIndex];
+            Menu menu = menus[menuIndex];
 
             stopwatch.Start();
-			string map = menuHandler.loadMenu(menu);
+            string map = menuHandler.loadMenu(menu);
             stopwatch.Stop();
 
             time += $"loadMenu: {stopwatch.Elapsed}";
@@ -135,7 +135,7 @@ namespace consolemon_library
             stopwatch.Stop();
             time += $"\nHandleKeyInputs: {stopwatch.Elapsed}";
 
-            return map + "\n" + time;
+            return map + "\n" + time + $"\n Player: \n world: X: {player.world.x}, Y: {player.world.y} \n chunk: X: {player.chunk.x}, Y: {player.chunk.y} \n local: X: {player.local.x}, Y: {player.local.y} ";
         }
     }
 }

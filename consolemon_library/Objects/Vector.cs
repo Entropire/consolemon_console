@@ -8,11 +8,11 @@ namespace consolemon_library.Objects
 {
 	internal class Vector
 	{
-		public int x = 0;
-		public int y = 0;
-		public int z = 0;
+		public int x { get; set; }
+        public int y { get; set; }
+        public int z { get; set; }
 
-		public Vector(int x, int y, int z)
+        public Vector(int x, int y, int z)
 		{
 			this.x = x; 
 			this.y = y; 

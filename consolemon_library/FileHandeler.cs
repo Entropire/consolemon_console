@@ -26,7 +26,9 @@ namespace consolemon_library
             }
             catch (Exception ex)
             {
+                Console.Clear();
                 Console.WriteLine("Error: " + ex.Message);
+                Console.ReadLine();
             }
 
             return default;
@@ -50,7 +52,9 @@ namespace consolemon_library
             }
             catch (Exception ex)
             {
+                Console.Clear();
                 Console.WriteLine("Error: " + ex.Message);
+                Console.ReadLine();
             }
         }
     }

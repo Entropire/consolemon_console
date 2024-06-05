@@ -1,5 +1,6 @@
 ﻿using consolemon_library.Objects;
 using System.ComponentModel.Design;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace consolemon_library
@@ -12,14 +13,14 @@ namespace consolemon_library
         {
             StringBuilder gameMapBuilder = new StringBuilder();
 
-            int worldPosX = player.world.x + -103;
-            int worldPosY = player.world.y + -16;
+            float worldPosX = (player.world.x + -103) / 8f;
+            float worldPosY = (player.world.y + -16) / 8f;
 
-            int chunkPosX = (player.chunk.x + (worldPosX / 8));
-            int chunkPosY = (player.chunk.y + (worldPosY / 8));
+            int chunkPosX = (int)Math.Floor(worldPosX);
+            int chunkPosY = (int)Math.Floor(worldPosY);
 
-            int localPosX = (worldPosX % 8 + 8) % 8;
-            int localPosY = (worldPosY % 8 + 8) % 8;
+            int localPosX = (int)((worldPosX - chunkPosX) * 8);
+            int localPosY = (int)((worldPosY - chunkPosY) * 8);
 
             for (int i = 0; i < 34; i++)
             {
@@ -33,7 +34,6 @@ namespace consolemon_library
                     }
                     else
                     {
-                        Console.Clear();
                         Console.WriteLine($"could not find chunk_{chunkX}_{chunkPosY}!");
                         Console.ReadLine();
                     }
@@ -81,8 +81,8 @@ namespace consolemon_library
 			int renderDistanceX = (int)Math.Ceiling((double)Console.WindowWidth / 8);
 			int renderDiscanceY = (int)Math.Ceiling((double)Console.WindowHeight / 8);
 
-			int chunk_X = player.chunk.x - renderDistanceX / 2;
-			int chunk_Y = player.chunk.y - renderDiscanceY / 2;
+			int chunk_X = (player.chunk.x - renderDistanceX / 2) - 1;
+			int chunk_Y = (player.chunk.y - renderDiscanceY / 2) - 1;
 
 			for (int i = 0; i < renderDiscanceY + 1; i++)
 			{
@@ -97,7 +97,15 @@ namespace consolemon_library
 					}
 					else
 					{
-						newLoadedChunks.Add(chunkName, GenerateChunk(new Vector(x, chunk_Y, 0)));
+                        Chunk newchunk = FileHandler.LoadFile<Chunk>("world/" + chunkName + ".json");
+                        if (newchunk != null)
+                        {
+                            newLoadedChunks.Add(chunkName, newchunk);
+                        }
+                        else
+                        {
+                            newLoadedChunks.Add(chunkName, GenerateChunk(new Vector(x, chunk_Y, 0)));
+                        }
 					}
 					x++;
 				}
@@ -106,7 +114,7 @@ namespace consolemon_library
 
 			foreach (Chunk chunk in loadedChunks.Values)
 			{
-				FileHandler.SaveFile(chunk, "map", $"chunk_{chunk.pos.x}_{chunk.pos.y}.json");
+				FileHandler.SaveFile(chunk, "world", $"chunk_{chunk.pos.x}_{chunk.pos.y}.json");
 			}
 
 			return newLoadedChunks;
@@ -118,7 +126,9 @@ namespace consolemon_library
 
 			string[][] map = new string[8][];
 
-			for (int i = 0; i < 8; i++)
+            map[0] = ProcessStrings(chunkPos.x, chunkPos.y, ["", "", "", "", "", "", "", ""]);
+
+			for (int i = 1; i < 8; i++)
 			{
 				map[i] = new string[8];
 				for (int j = 0; j < 8; j++)
@@ -139,5 +149,26 @@ namespace consolemon_library
 
 			return chunk;
 		}
-	}
+
+        public string[] ProcessStrings(int int1, int int2, string[] strings)
+        {
+            // Convert integers to strings and pad with zeros if necessary
+            string str1 = int1.ToString("D4").Substring(0, 4);
+            string str2 = int2.ToString("D4").Substring(0, 4);
+
+            // Modify the first four strings
+            for (int i = 0; i < 4; i++)
+            {
+                strings[i] = str1[i].ToString();
+            }
+
+            // Modify the last four strings
+            for (int i = 0; i < 4; i++)
+            {
+                strings[strings.Length - 1 - i] = str2[i].ToString();
+            }
+
+            return strings;
+        }
+    }
 }

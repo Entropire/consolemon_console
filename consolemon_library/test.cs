@@ -65,8 +65,8 @@ worldPosY = (player.y - 16) / chunkHeight = -2;
 chunkPosX = math.cleiling(worldPosX) = -13;
 chunkPosY = math.ceiling(worldPosY) = -2;
 
-localPosX = 8 * (math.floor(worldPosX) - worldPosX) 
-localPosX = 8 * (math.floor(worldPosY) - worldPosY) 
+localPosX = 8 * (math.floor(worldPosX) - worldPosX)  =
+localPosX = 8 * (math.floor(worldPosY) - worldPosY)  = 
 
 vecter2 player.local = new vecter2(8,8);
 
