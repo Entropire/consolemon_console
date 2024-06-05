@@ -1,5 +1,6 @@
 ﻿using consolemon_library.Objects;
 using System.ComponentModel.Design;
+using System.Text;
 
 namespace consolemon_library
 {
@@ -7,9 +8,9 @@ namespace consolemon_library
 	{
         private int index = 0;
 
-		internal string LoadMap(Player player, Dictionary<string, Chunk> loadedChunks, string map)
-		{
-			string gameMap = "";
+        internal string LoadMap(Player player, Dictionary<string, Chunk> loadedChunks, string map)
+        {
+            StringBuilder gameMapBuilder = new StringBuilder();
 
             int worldPosX = player.world.x + -103;
             int worldPosY = player.world.y + -16;
@@ -21,29 +22,29 @@ namespace consolemon_library
             int localPosY = (worldPosY % 8 + 8) % 8;
 
             for (int i = 0; i < 34; i++)
-			{
-				double chunkX = chunkPosX;
-				double localX = localPosX;
-				for (int j = 0; j < 207; j++)
-				{
-					if (loadedChunks.TryGetValue($"chunk_{chunkX}_{chunkPosY}", out Chunk? chunk))
-					{
-						gameMap += chunk.map[(int)localPosY][(int)localX];
-					}
-					else
-					{
-						Console.Clear();
-						Console.WriteLine($"could not find chunk_{chunkX}_{chunkPosY}!");
-						Console.ReadLine();
-					}
+            {
+                double chunkX = chunkPosX;
+                double localX = localPosX;
+                for (int j = 0; j < 207; j++)
+                {
+                    if (loadedChunks.TryGetValue($"chunk_{chunkX}_{chunkPosY}", out Chunk? chunk))
+                    {
+                        gameMapBuilder.Append(chunk.map[(int)localPosY][(int)localX]);
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine($"could not find chunk_{chunkX}_{chunkPosY}!");
+                        Console.ReadLine();
+                    }
 
-					localX++;
-					if (localX >= 8)
-					{
-						localX = 0;
-						chunkX++;
-					}
-				}
+                    localX++;
+                    if (localX >= 8)
+                    {
+                        localX = 0;
+                        chunkX++;
+                    }
+                }
 
                 localPosY++;
                 if (localPosY >= 8)
@@ -53,25 +54,27 @@ namespace consolemon_library
                 }
             }
 
-			for (int i = 0; i < gameMap.Length; i++)
-			{
-				int charIndex = map.IndexOf("Q");
+            string gameMap = gameMapBuilder.ToString();
 
-				if (i != 3415)
-				{
-					map = map.Remove(charIndex, 1).Insert(charIndex, gameMap[i].ToString());
-				}
-				else
-				{
-					map = map.Remove(charIndex, 1).Insert(charIndex, "P");
-				}
+            int charIndex = map.IndexOf("Q");
+            StringBuilder resultBuilder = new StringBuilder(map);
+            for (int i = 0; i < gameMap.Length; i++)
+            {
+                if (i != 3415)
+                {
+                    resultBuilder[charIndex] = gameMap[i];
+                }
+                else
+                {
+                    resultBuilder[charIndex] = 'P';
+                }
+                charIndex = map.IndexOf("Q", charIndex + 1);
+            }
 
-			}
+            return resultBuilder.ToString();
+        }
 
-			return map;
-		}
-
-		internal Dictionary<string, Chunk> LoadChunks(Player player, Dictionary<string, Chunk> loadedChunks)
+        internal Dictionary<string, Chunk> LoadChunks(Player player, Dictionary<string, Chunk> loadedChunks)
 		{
 			Dictionary<string, Chunk> newLoadedChunks = new Dictionary<string, Chunk>();
 
