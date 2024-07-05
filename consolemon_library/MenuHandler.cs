@@ -11,7 +11,6 @@ namespace consolemon_library
             this.program = program;
         }
 
-
         public string loadMenu(Menu menu)
         {
             if (program.runGame)

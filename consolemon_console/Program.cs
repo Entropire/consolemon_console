@@ -37,7 +37,7 @@ namespace consolemon_console
                 string newMap = consolemon.Update();
                 Console.WriteLine(newMap);
                 stopwatch.Stop();
-                Console.WriteLine($"\nframe: {stopwatch.Elapsed}");
+                Console.WriteLine($"frame: {stopwatch.Elapsed}");
             }
         }
 

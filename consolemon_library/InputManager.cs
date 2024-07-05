@@ -36,6 +36,7 @@ namespace consolemon_library.old
                         HandleMoveRight(menu);
                         break;
                     case ConsoleKey.Escape:
+						HandleEscape(menu);
                         break;
                     case ConsoleKey.Enter:
                         HandleEnter(menu);
@@ -91,9 +92,21 @@ namespace consolemon_library.old
             }
         }
 
-        private void HandleEnter(Menu menu)
+        private void HandleEscape(Menu menu)
         {
-            menu.menuOptions[menu.selectedIndex].OnOptionSelected.Invoke(menu.menuOptions[menu.selectedIndex]);
+            if (consolemon.menuIndex == 0)
+            {
+                consolemon.runGame = false;
+                consolemon.menuIndex = 4;
+            }
+        }
+
+		private void HandleEnter(Menu menu)
+        {
+            if (consolemon.menuIndex != 0 && consolemon.menuIndex != 1)
+            {
+				menu.menuOptions[menu.selectedIndex].OnOptionSelected?.Invoke(menu.menuOptions[menu.selectedIndex]);
+			}
         }
     }
 }

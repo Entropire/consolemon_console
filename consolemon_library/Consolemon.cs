@@ -1,7 +1,5 @@
 ﻿using consolemon_library.Objects;
 using consolemon_library.old;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace consolemon_library
 {
@@ -9,8 +7,8 @@ namespace consolemon_library
     {
         private MenuHandler? menuHandler;
         private InputManager? inputManager;
-        private MapHandler mapHandler = new MapHandler();
-        internal Player player = new Player();
+        private EntityHandler entityHandler;
+		internal Player player = new Player();
 
 		private Dictionary<string, Chunk> loadedChunks = new Dictionary<string, Chunk>();
 
@@ -25,7 +23,10 @@ namespace consolemon_library
         {
             menuHandler = new MenuHandler(this);
             inputManager = new InputManager(this);
-            
+            Pokemon[] pokemons = FileHandler.LoadFile<Pokemon[]>("assets/consolemons.json");
+
+            entityHandler = new EntityHandler(pokemons, 50);
+
             menus = LoadMenus();
         }
 
@@ -107,35 +108,20 @@ namespace consolemon_library
 
             string time = "";
 
-            Stopwatch stopwatch = new Stopwatch();
-
             Menu menu = menus[menuIndex];
 
-            stopwatch.Start();
             string map = menuHandler.loadMenu(menu);
-            stopwatch.Stop();
-
-            time += $"loadMenu: {stopwatch.Elapsed}";
 
             if (runGame == true)
             {
-                stopwatch.Restart();
-                loadedChunks = mapHandler.LoadChunks(player, loadedChunks);
-                stopwatch.Stop();
-                time += $"\nLoadChunks: {stopwatch.Elapsed}";
+                loadedChunks = MapHandler.LoadChunks(player, loadedChunks);
+				entityHandler.SpawnEntities(loadedChunks);
 
-                stopwatch.Restart();
-                map = mapHandler.LoadMap(player, loadedChunks, map);
-                stopwatch.Stop();
-                time += $"\nLoadMap: {stopwatch.Elapsed}";
+				map = MapHandler.LoadMap(player, loadedChunks, map);
             }
+            inputManager?.HandleKeyInputs(menu);
 
-            stopwatch.Restart();
-            inputManager.HandleKeyInputs(menu);
-            stopwatch.Stop();
-            time += $"\nHandleKeyInputs: {stopwatch.Elapsed}";
-
-            return map + "\n" + time + $"\n Player: \n world: X: {player.world.x}, Y: {player.world.y} \n chunk: X: {player.chunk.x}, Y: {player.chunk.y} \n local: X: {player.local.x}, Y: {player.local.y} ";
+            return map + "\n" + time + $"\n {player.world.x} : {player.world.y}";
         }
     }
 }

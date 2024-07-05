@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace consolemon_library.Objects
+﻿namespace consolemon_library.Objects
 {
 	internal class Player
 	{
@@ -21,17 +15,29 @@ namespace consolemon_library.Objects
 			local.x += x;
 			local.y += y;
 
-            if (local.x >= 8)
+            if (local.x > 7)
             {
                 local.x = 0;
                 chunk.x++;
             }
 
-            if (local.y >= 8)
+            if (local.y > 7)
             {
                 local.y = 0;
                 chunk.y++;
             }
-        }
+
+			if (local.x < 0)
+			{
+				local.x = 7;
+				chunk.x--;
+			}
+
+			if (local.y < 0)
+			{
+				local.y = 7;
+				chunk.y--;
+			}
+		}
 	}
 }

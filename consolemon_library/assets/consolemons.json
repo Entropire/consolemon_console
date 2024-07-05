@@ -17,7 +17,22 @@
         "energyCost": 0,
         "element": 3
       }
-    ]
+    ],
+    "world": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "chunk": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "local": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    }
   },
   {
     "name": "EnterMon",
@@ -37,10 +52,25 @@
         "energyCost": 0,
         "element": 3
       }
-    ]
+    ],
+    "world": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "chunk": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "local": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    }
   },
   {
-    "name": "NewLineMon",
+    "name": "EnterMon",
     "health": 90,
     "energy": 15,
     "weakness": 1,
@@ -57,6 +87,21 @@
         "energyCost": 0,
         "element": 3
       }
-    ]
+    ],
+    "world": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "chunk": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "local": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    }
   }
 ]
