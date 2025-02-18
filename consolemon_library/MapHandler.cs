@@ -9,7 +9,7 @@ namespace consolemon_library
         internal static string LoadMap(Player player, Dictionary<string, Chunk> loadedChunks, string map)
         {
             StringBuilder gameMapBuilder = new StringBuilder();
-
+(
             float worldPosX = (player.world.x + -103) / 8f;
             float worldPosY = (player.world.y + -16) / 8f;
 
@@ -17,7 +17,7 @@ namespace consolemon_library
             int chunkPosY = (int)Math.Floor(worldPosY);
 
             int localPosX = (int)((worldPosX - chunkPosX) * 8);
-            int localPosY = (int)((worldPosY - chunkPosY) * 8);
+            int localPosY = (int)((worldPosY - chunkPosY) * 8);)
 
             for (int i = 0; i < 34; i++)
             {
